@@ -1,4 +1,4 @@
-# SSO Proxy
+# SSO Switch Proxy
 
 A multi-IdP SSO proxy for OIDC and SAML federated authentication, written in Go.
 
