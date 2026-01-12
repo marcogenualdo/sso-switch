@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Identity Provider - SSO Proxy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .providers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .provider-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .provider-button:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .provider-button:active {
+            transform: translateY(0);
+        }
+
+        .provider-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .provider-type {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .provider-type.oidc {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .provider-type.saml {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .provider-button {
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sign In</h1>
+        <p class="subtitle">Choose your identity provider to continue</p>
+
+        <form method="POST" action="/auth/select">
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            <div class="providers">
+                {{range .Providers}}
+                <button type="submit" name="provider" value="{{.ID}}" class="provider-button">
+                    <span class="provider-name">{{.Name}}</span>
+                    <span class="provider-type {{.Type}}">{{.Type}}</span>
+                </button>
+                {{end}}
+            </div>
+        </form>
+
+        <div class="footer">
+            Powered by <a href="https://github.com/marcogenualdo/sso-proxy" target="_blank">SSO Proxy</a>
+        </div>
+    </div>
+</body>
+</html>

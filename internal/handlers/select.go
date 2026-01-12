@@ -1,0 +1,149 @@
+package handlers
+
+import (
+	"embed"
+	"encoding/json"
+	"html/template"
+	"log/slog"
+	"net/http"
+
+	"github.com/marcogenualdo/sso-proxy/internal/auth"
+	"github.com/marcogenualdo/sso-proxy/internal/cache"
+	"github.com/marcogenualdo/sso-proxy/internal/config"
+	"github.com/marcogenualdo/sso-proxy/internal/middleware"
+)
+
+//go:embed templates/*
+var templatesFS embed.FS
+
+type SelectHandler struct {
+	cfg       config.Config
+	cache     cache.Cache
+	providers map[string]auth.Provider
+	csrf      *middleware.CSRFMiddleware
+	logger    *slog.Logger
+	template  *template.Template
+}
+
+func NewSelectHandler(cfg config.Config, cache cache.Cache, providers map[string]auth.Provider, csrf *middleware.CSRFMiddleware, logger *slog.Logger) (*SelectHandler, error) {
+	tmpl, err := template.ParseFS(templatesFS, "templates/select.html")
+	if err != nil {
+		return nil, err
+	}
+
+	return &SelectHandler{
+		cfg:       cfg,
+		cache:     cache,
+		providers: providers,
+		csrf:      csrf,
+		logger:    logger,
+		template:  tmpl,
+	}, nil
+}
+
+type SelectPageData struct {
+	Providers []ProviderInfo
+	CSRFToken string
+}
+
+type ProviderInfo struct {
+	ID   string
+	Name string
+	Type string
+}
+
+func (h *SelectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		h.handleGet(w, r)
+	} else if r.Method == "POST" {
+		h.handlePost(w, r)
+	} else {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func (h *SelectHandler) handleGet(w http.ResponseWriter, r *http.Request) {
+	csrfToken, err := h.csrf.GenerateCSRFToken(r.Context())
+	if err != nil {
+		h.logger.Error("failed to generate CSRF token", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	providers := make([]ProviderInfo, 0, len(h.providers))
+	for _, provider := range h.providers {
+		providers = append(providers, ProviderInfo{
+			ID:   provider.ID(),
+			Name: provider.Name(),
+			Type: provider.Type(),
+		})
+	}
+
+	data := SelectPageData{
+		Providers: providers,
+		CSRFToken: csrfToken,
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := h.template.Execute(w, data); err != nil {
+		h.logger.Error("failed to render template", "error", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func (h *SelectHandler) handlePost(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		return
+	}
+
+	providerID := r.FormValue("provider")
+	if providerID == "" {
+		http.Error(w, "Provider is required", http.StatusBadRequest)
+		return
+	}
+
+	provider, exists := h.providers[providerID]
+	if !exists {
+		http.Error(w, "Invalid provider", http.StatusBadRequest)
+		return
+	}
+
+	var redirectURL string
+	if provider.Type() == "oidc" {
+		redirectURL = h.cfg.Server.BaseURL + "/auth/oidc/" + providerID + "/callback"
+	} else {
+		redirectURL = h.cfg.Server.BaseURL + "/auth/saml/" + providerID + "/acs"
+	}
+
+	authRedirect, err := provider.InitiateAuth(r.Context(), redirectURL)
+	if err != nil {
+		h.logger.Error("failed to initiate auth", "provider", providerID, "error", err)
+		http.Error(w, "Failed to initiate authentication", http.StatusInternalServerError)
+		return
+	}
+
+	if authRedirect.CacheKey != "" && authRedirect.CacheData != nil {
+		var data []byte
+		switch v := authRedirect.CacheData.(type) {
+		case []byte:
+			data = v
+		default:
+			var err error
+			data, err = json.Marshal(v)
+			if err != nil {
+				h.logger.Error("failed to marshal cache data", "error", err)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				return
+			}
+		}
+
+		if err := h.cache.Set(r.Context(), authRedirect.CacheKey, data, authRedirect.CacheTTL); err != nil {
+			h.logger.Error("failed to cache auth state", "error", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	http.Redirect(w, r, authRedirect.URL, http.StatusFound)
+}

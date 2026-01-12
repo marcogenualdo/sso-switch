@@ -17,3 +17,31 @@ go.work.sum
 
 # env file
 .envrc
+
+# SSO Proxy specific
+sso-proxy
+*.exe
+
+# Config with secrets
+config.yaml
+!examples/*.yaml
+
+# Certificates
+*.pem
+*.key
+*.crt
+certs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local development
+test-backend/
