@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/marcogenualdo/sso-proxy/internal/config"
+	"github.com/marcogenualdo/sso-switch/internal/config"
 )
 
 func CreateSessionCookie(cfg config.ServerConfig, sessionID string, maxAge time.Duration) *http.Cookie {

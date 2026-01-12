@@ -6,9 +6,9 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"github.com/marcogenualdo/sso-proxy/internal/auth"
-	"github.com/marcogenualdo/sso-proxy/internal/config"
-	"github.com/marcogenualdo/sso-proxy/internal/middleware"
+	"github.com/marcogenualdo/sso-switch/internal/auth"
+	"github.com/marcogenualdo/sso-switch/internal/config"
+	"github.com/marcogenualdo/sso-switch/internal/middleware"
 )
 
 type ReverseProxy struct {

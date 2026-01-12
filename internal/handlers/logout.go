@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/marcogenualdo/sso-proxy/internal/cache"
-	"github.com/marcogenualdo/sso-proxy/internal/config"
-	"github.com/marcogenualdo/sso-proxy/pkg/security"
+	"github.com/marcogenualdo/sso-switch/internal/cache"
+	"github.com/marcogenualdo/sso-switch/internal/config"
+	"github.com/marcogenualdo/sso-switch/pkg/security"
 )
 
 type LogoutHandler struct {

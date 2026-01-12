@@ -7,10 +7,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/marcogenualdo/sso-proxy/internal/auth"
-	"github.com/marcogenualdo/sso-proxy/internal/cache"
-	"github.com/marcogenualdo/sso-proxy/internal/config"
-	"github.com/marcogenualdo/sso-proxy/internal/middleware"
+	"github.com/marcogenualdo/sso-switch/internal/auth"
+	"github.com/marcogenualdo/sso-switch/internal/cache"
+	"github.com/marcogenualdo/sso-switch/internal/config"
+	"github.com/marcogenualdo/sso-switch/internal/middleware"
 )
 
 //go:embed templates/*

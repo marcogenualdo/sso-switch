@@ -1,4 +1,4 @@
-module github.com/marcogenualdo/sso-proxy
+module github.com/marcogenualdo/sso-switch
 
 go 1.25.5
 

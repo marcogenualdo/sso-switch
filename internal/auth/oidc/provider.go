@@ -12,9 +12,9 @@ import (
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/google/uuid"
-	"github.com/marcogenualdo/sso-proxy/internal/auth"
-	"github.com/marcogenualdo/sso-proxy/internal/cache"
-	"github.com/marcogenualdo/sso-proxy/internal/config"
+	"github.com/marcogenualdo/sso-switch/internal/auth"
+	"github.com/marcogenualdo/sso-switch/internal/cache"
+	"github.com/marcogenualdo/sso-switch/internal/config"
 	"golang.org/x/oauth2"
 )
 

@@ -1,11 +1,11 @@
 .PHONY: help build test clean run docker docker-run lint fmt vet check deps
 
-BINARY_NAME=sso-proxy
-DOCKER_IMAGE=sso-proxy:latest
+BINARY_NAME=sso-switch.run
+DOCKER_IMAGE=sso-switch:latest
 CONFIG_PATH=./examples/config.yaml
 
 help:
-	@echo "SSO Proxy - Makefile commands:"
+	@echo "SSO Switch - Makefile commands:"
 	@echo "  make build       - Build the binary"
 	@echo "  make test        - Run tests"
 	@echo "  make clean       - Clean build artifacts"
@@ -20,12 +20,12 @@ help:
 
 build:
 	@echo "Building $(BINARY_NAME)..."
-	@go build -o $(BINARY_NAME) ./cmd/sso-proxy
+	@go build -o $(BINARY_NAME) ./cmd/sso-switch
 	@echo "Build complete: $(BINARY_NAME)"
 
 build-linux:
 	@echo "Building $(BINARY_NAME) for Linux..."
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o $(BINARY_NAME) ./cmd/sso-proxy
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o $(BINARY_NAME) ./cmd/sso-switch
 	@echo "Build complete: $(BINARY_NAME)"
 
 test:
@@ -94,7 +94,7 @@ deps:
 
 install:
 	@echo "Installing $(BINARY_NAME)..."
-	@go install ./cmd/sso-proxy
+	@go install ./cmd/sso-switch
 	@echo "Installed to $(shell go env GOPATH)/bin/$(BINARY_NAME)"
 
 .DEFAULT_GOAL := help

@@ -33,8 +33,8 @@ This proxy intercepts HTTP requests and provides seamless authentication:
 
 ```bash
 # Clone the repository
-git clone https://github.com/marcogenualdo/sso-proxy.git
-cd sso-proxy
+git clone https://github.com/marcogenualdo/sso-switch.git
+cd sso-switch
 
 # Edit configuration
 cp examples/config.yaml config.yaml
@@ -44,7 +44,7 @@ cp examples/config.yaml config.yaml
 docker-compose up -d
 
 # View logs
-docker-compose logs -f sso-proxy
+docker-compose logs -f sso-switch
 ```
 
 ### Building from Source
@@ -57,7 +57,7 @@ go mod download
 make build
 
 # Run
-./sso-proxy --config config.yaml
+./sso-switch --config config.yaml
 ```
 
 ## Configuration
@@ -108,7 +108,7 @@ logging:
 | `host` | string | `0.0.0.0` | Listen address |
 | `port` | int | `8080` | Listen port |
 | `base_url` | string | required | External URL for callbacks |
-| `cookie_name` | string | `sso-proxy-session` | Session cookie name |
+| `cookie_name` | string | `sso-switch-session` | Session cookie name |
 | `cookie_domain` | string | - | Cookie domain (e.g., `.example.com`) |
 | `cookie_secure` | bool | `false` | Require HTTPS for cookies |
 | `cookie_http_only` | bool | `true` | HttpOnly cookie flag |
@@ -147,8 +147,8 @@ providers:
         <EntityDescriptor ...>
       sp_entity_id: "https://sso.example.com/saml/metadata"
       acs_url: "https://sso.example.com/auth/saml/provider-id/acs"
-      certificate_path: "/etc/sso-proxy/certs/sp-cert.pem"
-      private_key_path: "/etc/sso-proxy/certs/sp-key.pem"
+      certificate_path: "/etc/sso-switch/certs/sp-cert.pem"
+      private_key_path: "/etc/sso-switch/certs/sp-key.pem"
     header_mappings:
       "urn:oid:0.9.2342.19200300.100.1.3": "X-User-Email"
 ```
@@ -206,14 +206,14 @@ See the `examples/` directory for complete configuration examples:
 
 ```bash
 # Build image
-docker build -t sso-proxy:latest .
+docker build -t sso-switch:latest .
 
 # Run container
 docker run -d \
   -p 8080:8080 \
-  -v $(pwd)/config.yaml:/etc/sso-proxy/config.yaml:ro \
-  --name sso-proxy \
-  sso-proxy:latest
+  -v $(pwd)/config.yaml:/etc/sso-switch/config.yaml:ro \
+  --name sso-switch \
+  sso-switch:latest
 ```
 
 ### Kubernetes
@@ -222,25 +222,25 @@ docker run -d \
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sso-proxy
+  name: sso-switch
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: sso-proxy
+      app: sso-switch
   template:
     metadata:
       labels:
-        app: sso-proxy
+        app: sso-switch
     spec:
       containers:
-      - name: sso-proxy
-        image: sso-proxy:latest
+      - name: sso-switch
+        image: sso-switch:latest
         ports:
         - containerPort: 8080
         volumeMounts:
         - name: config
-          mountPath: /etc/sso-proxy
+          mountPath: /etc/sso-switch
         env:
         - name: azure_CLIENT_SECRET
           valueFrom:
@@ -359,8 +359,8 @@ make check
 ### Project Structure
 
 ```
-sso-proxy/
-├── cmd/sso-proxy/          # Application entry point
+sso-switch/
+├── cmd/sso-switch/          # Application entry point
 ├── internal/               # Private application code
 │   ├── auth/               # Authentication providers
 │   ├── cache/              # Cache implementations

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/marcogenualdo/sso-proxy/internal/auth"
+	"github.com/marcogenualdo/sso-switch/internal/auth"
 )
 
 func InjectHeaders(req *http.Request, session *auth.Session, provider auth.Provider) error {

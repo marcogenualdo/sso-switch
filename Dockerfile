@@ -16,8 +16,8 @@ COPY . .
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags="-w -s" \
-    -o sso-proxy \
-    ./cmd/sso-proxy
+    -o sso-switch \
+    ./cmd/sso-switch
 
 # Runtime stage
 FROM alpine:latest
@@ -32,11 +32,11 @@ RUN addgroup -g 1000 sso && \
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /build/sso-proxy .
+COPY --from=builder /build/sso-switch .
 
 # Create directories for config and certs
-RUN mkdir -p /etc/sso-proxy/certs && \
-    chown -R sso:sso /etc/sso-proxy
+RUN mkdir -p /etc/sso-switch/certs && \
+    chown -R sso:sso /etc/sso-switch
 
 # Switch to non-root user
 USER sso
@@ -46,5 +46,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
-ENTRYPOINT ["./sso-proxy"]
-CMD ["--config", "/etc/sso-proxy/config.yaml"]
+ENTRYPOINT ["./sso-switch"]
+CMD ["--config", "/etc/sso-switch/config.yaml"]

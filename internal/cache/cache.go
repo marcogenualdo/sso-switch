@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/marcogenualdo/sso-proxy/internal/config"
+	"github.com/marcogenualdo/sso-switch/internal/config"
 )
 
 var ErrNotFound = errors.New("key not found")

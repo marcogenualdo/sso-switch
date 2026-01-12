@@ -109,7 +109,7 @@ func (c *Config) setDefaults() error {
 		c.Server.Port = 8080
 	}
 	if c.Server.CookieName == "" {
-		c.Server.CookieName = "sso-proxy-session"
+		c.Server.CookieName = "sso-switch-session"
 	}
 	if c.Server.CookieHTTPOnly == false {
 		c.Server.CookieHTTPOnly = true

@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  sso-proxy:
+  sso-switch:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sso-proxy
+    container_name: sso-switch
     ports:
       - "9090:8080"
     volumes:
-      - ./tests/proxy/cfg.yaml:/etc/sso-proxy/config.yaml:ro
-      - ./tests/proxy/certs:/etc/sso-proxy/certs
+      - ./tests/proxy/cfg.yaml:/etc/sso-switch/config.yaml:ro
+      - ./tests/proxy/certs:/etc/sso-switch/certs
     depends_on:
       - redis
       - backend

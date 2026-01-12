@@ -4,10 +4,10 @@ import (
 	"encoding/xml"
 	"net/http"
 
-	"github.com/marcogenualdo/sso-proxy/internal/auth/saml"
-	"github.com/marcogenualdo/sso-proxy/internal/handlers"
-	"github.com/marcogenualdo/sso-proxy/internal/middleware"
-	"github.com/marcogenualdo/sso-proxy/internal/proxy"
+	"github.com/marcogenualdo/sso-switch/internal/auth/saml"
+	"github.com/marcogenualdo/sso-switch/internal/handlers"
+	"github.com/marcogenualdo/sso-switch/internal/middleware"
+	"github.com/marcogenualdo/sso-switch/internal/proxy"
 )
 
 func (s *Server) setupRoutes() (http.Handler, error) {

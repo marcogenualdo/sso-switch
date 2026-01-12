@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/marcogenualdo/sso-proxy/internal/auth"
-	"github.com/marcogenualdo/sso-proxy/internal/cache"
-	"github.com/marcogenualdo/sso-proxy/internal/config"
-	"github.com/marcogenualdo/sso-proxy/pkg/security"
+	"github.com/marcogenualdo/sso-switch/internal/auth"
+	"github.com/marcogenualdo/sso-switch/internal/cache"
+	"github.com/marcogenualdo/sso-switch/internal/config"
+	"github.com/marcogenualdo/sso-switch/pkg/security"
 )
 
 type contextKey string

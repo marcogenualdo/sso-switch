@@ -4,7 +4,7 @@ server:
   host: "0.0.0.0"
   port: 8080
   base_url: "https://sso.example.com"
-  cookie_name: "sso-proxy-session"
+  cookie_name: "sso-switch-session"
   cookie_domain: ".example.com"
   cookie_secure: true
   cookie_http_only: true
@@ -51,8 +51,8 @@ providers:
       idp_metadata_url: "https://dev-xxx.okta.com/app/xxx/sso/saml/metadata"
       sp_entity_id: "https://sso.example.com/saml/metadata"
       acs_url: "https://sso.example.com/auth/saml/okta-saml/acs"
-      certificate_path: "/etc/sso-proxy/certs/sp-cert.pem"
-      private_key_path: "/etc/sso-proxy/certs/sp-key.pem"
+      certificate_path: "/etc/sso-switch/certs/sp-cert.pem"
+      private_key_path: "/etc/sso-switch/certs/sp-key.pem"
     header_mappings:
       "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": "X-User-Email"
       "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": "X-User-Name"
