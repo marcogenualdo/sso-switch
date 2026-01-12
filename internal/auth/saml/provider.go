@@ -127,7 +127,7 @@ func (p *Provider) GetHeaderMappings() map[string]string {
 }
 
 func (p *Provider) InitiateAuth(ctx context.Context, redirectURL string) (*auth.AuthRedirect, error) {
-	requestID := uuid.New().String()
+	requestID := "id-" + uuid.New().String()
 
 	authReq, err := p.sp.MakeAuthenticationRequest(
 		p.sp.GetSSOBindingLocation(saml.HTTPRedirectBinding),
