@@ -9,34 +9,35 @@ services:
     ports:
       - "9090:8080"
     volumes:
-      - ./cfg.yaml:/etc/sso-proxy/config.yaml:ro
+      - ./tests/proxy/cfg.yaml:/etc/sso-proxy/config.yaml:ro
+      - ./tests/proxy/certs:/etc/sso-proxy/certs
     depends_on:
-      # - redis
+      - redis
       - backend
     networks:
       - sso-network
     restart: unless-stopped
 
-  # redis:
-  #   image: redis:7-alpine
-  #   container_name: sso-redis
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - redis-data:/data
-  #   command: redis-server --appendonly yes
-  #   networks:
-  #     - sso-network
-  #   restart: unless-stopped
-  #   healthcheck:
-  #     test: ["CMD", "redis-cli", "ping"]
-  #     interval: 10s
-  #     timeout: 3s
-  #     retries: 3
+  redis:
+    image: redis:7-alpine
+    container_name: sso-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - sso-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   backend:
     build:
-      context: ./examples/backend
+      context: ./tests/backend
       dockerfile: Dockerfile
     container_name: sso-backend
     ports:
@@ -45,9 +46,9 @@ services:
       - sso-network
     restart: unless-stopped
 
-# volumes:
-#   redis-data:
-#     driver: local
+volumes:
+  redis-data:
+    driver: local
 
 networks:
   sso-network:

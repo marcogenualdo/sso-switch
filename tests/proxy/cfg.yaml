@@ -1,0 +1,61 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+  base_url: "https://dumpishly-semispeculative-romelia.ngrok-free.dev"
+  # Cookie domain removed - browser will use exact domain
+  # cookie_domain: ""
+  cookie_secure: true
+  session_ttl: "24h"
+
+backend:
+  url: "http://backend:8080"
+  timeout: "30s"
+
+cache:
+  type: "redis"
+  redis:
+    address: "redis:6379"
+    password: ""
+    db: 0
+    pool_size: 10
+    max_retries: 3
+
+providers:
+  - id: "azuresaml"
+    name: "Azure SAML"
+    type: "saml"
+    saml:
+      idp_metadata_url: "https://login.microsoftonline.com/3a790024-fc09-4324-bd39-97b76e6e3209/federationmetadata/2007-06/federationmetadata.xml?appid=f8c032ba-a67f-4d7a-9c4d-b8ae5f0bea85"
+      sp_entity_id: "https://dumpishly-semispeculative-romelia.ngrok-free.dev/auth/saml/azuresaml/metadata"
+      acs_url: "https://dumpishly-semispeculative-romelia.ngrok-free.dev/auth/saml/azuresaml/acs"
+      certificate_path: "/etc/sso-proxy/certs/sp-cert.pem"
+      private_key_path: "/etc/sso-proxy/certs/sp-key.pem"
+    header_mappings:
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": "X-User-Email"
+  - id: "auth0"
+    name: "Auth0 Trial"
+    type: "oidc"
+    oidc:
+      # Replace {tenant-id} with your Azure AD tenant ID or "common" for multi-tenant
+      issuer: "https://dev-xwzevhsbkgd0eo02.us.auth0.com/"
+      # Get these from Azure Portal > App registrations
+      client_id: ""
+      client_secret: ""
+      scopes:
+        - "openid"
+        - "profile"
+        - "email"
+        # Optional: request additional scopes
+        # - "User.Read"
+    header_mappings:
+      email: "X-User-Email"
+      name: "X-User-Name"
+      sub: "X-User-ID"
+
+logging:
+  level: "debug"
+  format: "text"
+
+# Environment variable overrides:
+# azure_CLIENT_ID=your-client-id
+# azure_CLIENT_SECRET=your-client-secret
