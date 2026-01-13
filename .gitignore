@@ -19,7 +19,7 @@ go.work.sum
 .envrc
 
 # SSO Proxy specific
-sso-proxy
+sso-switch.run
 *.exe
 
 # Config with secrets
