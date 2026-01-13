@@ -23,8 +23,8 @@ cache:
 ui:
   enable: false
   title: "Test"
-  gradient_start: "#667eea"
-  gradient_end: "#764ba2"
+  gradient_start: "#122e53"
+  gradient_end: "#127a87"
   logo_path: "/etc/sso-switch/logo.png"
 
 providers:
