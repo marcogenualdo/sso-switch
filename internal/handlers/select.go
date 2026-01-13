@@ -57,11 +57,12 @@ type ProviderInfo struct {
 }
 
 func (h *SelectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
+	switch r.Method {
+	case "GET":
 		h.handleGet(w, r)
-	} else if r.Method == "POST" {
+	case "POST":
 		h.handlePost(w, r)
-	} else {
+	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
