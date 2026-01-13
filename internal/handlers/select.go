@@ -66,7 +66,55 @@ func (h *SelectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h *SelectHandler) initiateAuthForProvider(w http.ResponseWriter, r *http.Request, provider auth.Provider) {
+	var redirectURL string
+	if provider.Type() == "oidc" {
+		redirectURL = h.cfg.Server.BaseURL + "/auth/oidc/" + provider.ID() + "/callback"
+	} else {
+		redirectURL = h.cfg.Server.BaseURL + "/auth/saml/" + provider.ID() + "/acs"
+	}
+
+	authRedirect, err := provider.InitiateAuth(r.Context(), redirectURL)
+	if err != nil {
+		h.logger.Error("failed to initiate auth", "provider", provider.ID(), "error", err)
+		http.Error(w, "Failed to initiate authentication", http.StatusInternalServerError)
+		return
+	}
+
+	if authRedirect.CacheKey != "" && authRedirect.CacheData != nil {
+		var data []byte
+		switch v := authRedirect.CacheData.(type) {
+		case []byte:
+			data = v
+		default:
+			var err error
+			data, err = json.Marshal(v)
+			if err != nil {
+				h.logger.Error("failed to marshal cache data", "error", err)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				return
+			}
+		}
+
+		if err := h.cache.Set(r.Context(), authRedirect.CacheKey, data, authRedirect.CacheTTL); err != nil {
+			h.logger.Error("failed to cache auth state", "error", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	http.Redirect(w, r, authRedirect.URL, http.StatusFound)
+}
+
 func (h *SelectHandler) handleGet(w http.ResponseWriter, r *http.Request) {
+	// If only one provider and UI is enabled (default), redirect directly to the provider
+	if len(h.providers) == 1 && h.cfg.UI.Enable != nil && *h.cfg.UI.Enable == false {
+		for _, provider := range h.providers {
+			h.initiateAuthForProvider(w, r, provider)
+			return
+		}
+	}
+
 	csrfToken, err := h.csrf.GenerateCSRFToken(r.Context())
 	if err != nil {
 		h.logger.Error("failed to generate CSRF token", "error", err)
@@ -122,43 +170,7 @@ func (h *SelectHandler) handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var redirectURL string
-	if provider.Type() == "oidc" {
-		redirectURL = h.cfg.Server.BaseURL + "/auth/oidc/" + providerID + "/callback"
-	} else {
-		redirectURL = h.cfg.Server.BaseURL + "/auth/saml/" + providerID + "/acs"
-	}
-
-	authRedirect, err := provider.InitiateAuth(r.Context(), redirectURL)
-	if err != nil {
-		h.logger.Error("failed to initiate auth", "provider", providerID, "error", err)
-		http.Error(w, "Failed to initiate authentication", http.StatusInternalServerError)
-		return
-	}
-
-	if authRedirect.CacheKey != "" && authRedirect.CacheData != nil {
-		var data []byte
-		switch v := authRedirect.CacheData.(type) {
-		case []byte:
-			data = v
-		default:
-			var err error
-			data, err = json.Marshal(v)
-			if err != nil {
-				h.logger.Error("failed to marshal cache data", "error", err)
-				http.Error(w, "Internal server error", http.StatusInternalServerError)
-				return
-			}
-		}
-
-		if err := h.cache.Set(r.Context(), authRedirect.CacheKey, data, authRedirect.CacheTTL); err != nil {
-			h.logger.Error("failed to cache auth state", "error", err)
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-			return
-		}
-	}
-
-	http.Redirect(w, r, authRedirect.URL, http.StatusFound)
+	h.initiateAuthForProvider(w, r, provider)
 }
 
 func (h *SelectHandler) ServeLogo(w http.ResponseWriter, r *http.Request) {

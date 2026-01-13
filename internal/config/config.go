@@ -81,6 +81,7 @@ type LoggingConfig struct {
 }
 
 type UIConfig struct {
+	Enable           *bool  `yaml:"enable"`
 	Title            string `yaml:"title"`
 	GradientStart    string `yaml:"gradient_start"`
 	GradientEnd      string `yaml:"gradient_end"`
@@ -156,6 +157,10 @@ func (c *Config) setDefaults() error {
 		c.Logging.Output = "stdout"
 	}
 
+	if c.UI.Enable == nil {
+		defaultEnable := true
+		c.UI.Enable = &defaultEnable
+	}
 	if c.UI.Title == "" {
 		c.UI.Title = "Sign In"
 	}

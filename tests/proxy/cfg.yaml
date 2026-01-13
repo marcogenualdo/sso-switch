@@ -21,6 +21,7 @@ cache:
     max_retries: 3
 
 ui:
+  enable: false
   title: "Test"
   gradient_start: "#667eea"
   gradient_end: "#764ba2"

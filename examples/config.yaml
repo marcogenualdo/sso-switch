@@ -82,6 +82,10 @@ logging:
   output: "stdout"
 
 ui:
+  # When true (default), automatically redirect to the IdP if only one provider is configured
+  # Set to false to always show the selection page even with a single provider
+  # This option is ignored when multiple providers are configured
+  enable: true
   # Page title displayed on the identity provider selection page
   title: "Sign In"
   # Gradient colors for the background (CSS color format)
