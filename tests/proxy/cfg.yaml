@@ -20,6 +20,12 @@ cache:
     pool_size: 10
     max_retries: 3
 
+ui:
+  title: "Test"
+  gradient_start: "#667eea"
+  gradient_end: "#764ba2"
+  logo_path: "/etc/sso-switch/logo.png"
+
 providers:
   - id: "azuresaml"
     name: "Azure SAML"

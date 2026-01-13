@@ -11,6 +11,7 @@ services:
     volumes:
       - ./tests/proxy/cfg.yaml:/etc/sso-switch/config.yaml:ro
       - ./tests/proxy/certs:/etc/sso-switch/certs
+      - ./tests/proxy/logo.png:/etc/sso-switch/logo.png
     depends_on:
       - redis
       - backend

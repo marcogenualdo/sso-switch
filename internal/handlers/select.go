@@ -42,8 +42,12 @@ func NewSelectHandler(cfg config.Config, cache cache.Cache, providers map[string
 }
 
 type SelectPageData struct {
-	Providers []ProviderInfo
-	CSRFToken string
+	Providers     []ProviderInfo
+	CSRFToken     string
+	PageTitle     string
+	GradientStart string
+	GradientEnd   string
+	LogoURL       string
 }
 
 type ProviderInfo struct {
@@ -79,9 +83,18 @@ func (h *SelectHandler) handleGet(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	logoURL := ""
+	if h.cfg.UI.LogoPath != "" {
+		logoURL = "/auth/select/logo"
+	}
+
 	data := SelectPageData{
-		Providers: providers,
-		CSRFToken: csrfToken,
+		Providers:     providers,
+		CSRFToken:     csrfToken,
+		PageTitle:     h.cfg.UI.Title,
+		GradientStart: h.cfg.UI.GradientStart,
+		GradientEnd:   h.cfg.UI.GradientEnd,
+		LogoURL:       logoURL,
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -146,4 +159,13 @@ func (h *SelectHandler) handlePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, authRedirect.URL, http.StatusFound)
+}
+
+func (h *SelectHandler) ServeLogo(w http.ResponseWriter, r *http.Request) {
+	if h.cfg.UI.LogoPath == "" {
+		http.NotFound(w, r)
+		return
+	}
+
+	http.ServeFile(w, r, h.cfg.UI.LogoPath)
 }

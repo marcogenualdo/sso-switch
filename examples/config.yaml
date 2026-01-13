@@ -80,3 +80,12 @@ logging:
   level: "info"
   format: "json"
   output: "stdout"
+
+ui:
+  # Page title displayed on the identity provider selection page
+  title: "Sign In"
+  # Gradient colors for the background (CSS color format)
+  gradient_start: "#667eea"
+  gradient_end: "#764ba2"
+  # Optional: Path to a logo image file (can be mounted in Docker)
+  logo_path: "/etc/sso-switch/logo.png"

@@ -14,6 +14,7 @@ type Config struct {
 	Cache     CacheConfig       `yaml:"cache"`
 	Providers []ProviderConfig  `yaml:"providers"`
 	Logging   LoggingConfig     `yaml:"logging"`
+	UI        UIConfig          `yaml:"ui"`
 }
 
 type ServerConfig struct {
@@ -77,6 +78,13 @@ type LoggingConfig struct {
 	Level  string `yaml:"level"`
 	Format string `yaml:"format"`
 	Output string `yaml:"output"`
+}
+
+type UIConfig struct {
+	Title            string `yaml:"title"`
+	GradientStart    string `yaml:"gradient_start"`
+	GradientEnd      string `yaml:"gradient_end"`
+	LogoPath         string `yaml:"logo_path"`
 }
 
 func Load(path string) (*Config, error) {
@@ -146,6 +154,16 @@ func (c *Config) setDefaults() error {
 	}
 	if c.Logging.Output == "" {
 		c.Logging.Output = "stdout"
+	}
+
+	if c.UI.Title == "" {
+		c.UI.Title = "Sign In"
+	}
+	if c.UI.GradientStart == "" {
+		c.UI.GradientStart = "#667eea"
+	}
+	if c.UI.GradientEnd == "" {
+		c.UI.GradientEnd = "#764ba2"
 	}
 
 	return nil

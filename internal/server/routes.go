@@ -31,6 +31,7 @@ func (s *Server) setupRoutes() (http.Handler, error) {
 	}
 
 	mux.HandleFunc("/auth/select", selectHandler.ServeHTTP)
+	mux.HandleFunc("/auth/select/logo", selectHandler.ServeLogo)
 
 	for id, provider := range s.providers {
 		if provider.Type() == "oidc" {

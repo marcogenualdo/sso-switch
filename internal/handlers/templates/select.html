@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Identity Provider - SSO Proxy</title>
+    <title>{{.PageTitle}} - SSO Proxy</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, {{.GradientStart}} 0%, {{.GradientEnd}} 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -28,6 +28,17 @@
             padding: 40px;
             max-width: 500px;
             width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 200px;
+            max-height: 80px;
+            object-fit: contain;
         }
 
         h1 {
@@ -135,7 +146,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Sign In</h1>
+        {{if .LogoURL}}
+        <div class="logo">
+            <img src="{{.LogoURL}}" alt="Logo">
+        </div>
+        {{end}}
+        <h1>{{.PageTitle}}</h1>
         <p class="subtitle">Choose your identity provider to continue</p>
 
         <form method="POST" action="/auth/select">
