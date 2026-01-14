@@ -12,9 +12,9 @@ services:
       auth0_CLIENT_ID: "${auth0_CLIENT_ID}"
       auth0_CLIENT_SECRET: "${auth0_CLIENT_SECRET}"
     volumes:
-      - ./tests/proxy/cfg.yaml:/etc/sso-switch/config.yaml:ro
-      - ./tests/proxy/certs:/etc/sso-switch/certs
-      - ./tests/proxy/logo.png:/etc/sso-switch/logo.png
+      - ./examples/proxy/config.yaml:/etc/sso-switch/config.yaml:ro
+      - ./examples/proxy/certs:/etc/sso-switch/certs
+      - ./examples/assets/logo.png:/etc/sso-switch/logo.png
     depends_on:
       - redis
       - backend
@@ -41,7 +41,7 @@ services:
 
   backend:
     build:
-      context: ./tests/backend
+      context: ./examples/backend
       dockerfile: Dockerfile
     container_name: sso-backend
     ports:

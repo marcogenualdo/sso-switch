@@ -29,7 +29,7 @@ ui:
 
 providers:
   - id: "azuresaml"
-    name: "Azure SAML"
+    name: "Azure Entra"
     type: "saml"
     saml:
       idp_metadata_url: "https://login.microsoftonline.com/3a790024-fc09-4324-bd39-97b76e6e3209/federationmetadata/2007-06/federationmetadata.xml?appid=f8c032ba-a67f-4d7a-9c4d-b8ae5f0bea85"

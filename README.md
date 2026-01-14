@@ -16,6 +16,8 @@ This proxy intercepts HTTP requests and provides seamless authentication:
 
 3. **After authentication**: The proxy validates tokens/assertions, creates a secure session, and caches the user information. Subsequent requests are automatically authenticated.
 
+![select-page](./examples/assets/demo.png)
+
 ## Features
 
 - **Multiple Identity Providers**: Support for multiple OIDC and SAML providers simultaneously
