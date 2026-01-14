@@ -78,6 +78,13 @@ backend:
   url: "http://backend-service:8000"
   timeout: "30s"
 
+ui:
+  enable: true  # can be false if there's only one IdP
+  title: "Test"
+  gradient_start: "#122e53"
+  gradient_end: "#127a87"
+  logo_path: "/etc/sso-switch/logo.png"  # optional brand logo
+
 cache:
   type: "redis"  # or "memory"
   redis:
