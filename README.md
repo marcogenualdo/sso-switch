@@ -177,12 +177,7 @@ export REDIS_PASSWORD="your-redis-password"
 
 ### Example Configurations
 
-See the `examples/` directory for complete configuration examples:
-
-- [`azure-entra.yaml`](examples/azure-entra.yaml) - Azure Entra ID (Azure AD) OIDC
-- [`okta.yaml`](examples/okta.yaml) - Okta SAML
-- [`google.yaml`](examples/google.yaml) - Google Workspace OIDC
-- [`config.yaml`](examples/config.yaml) - Full example with multiple providers
+See the `examples/` directory for complete configuration examples.
 
 ## IdP Setup Guides
 
