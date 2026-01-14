@@ -9,12 +9,12 @@ import (
 )
 
 type Config struct {
-	Server    ServerConfig      `yaml:"server"`
-	Backend   BackendConfig     `yaml:"backend"`
-	Cache     CacheConfig       `yaml:"cache"`
-	Providers []ProviderConfig  `yaml:"providers"`
-	Logging   LoggingConfig     `yaml:"logging"`
-	UI        UIConfig          `yaml:"ui"`
+	Server    ServerConfig     `yaml:"server"`
+	Backend   BackendConfig    `yaml:"backend"`
+	Cache     CacheConfig      `yaml:"cache"`
+	Providers []ProviderConfig `yaml:"providers"`
+	Logging   LoggingConfig    `yaml:"logging"`
+	UI        UIConfig         `yaml:"ui"`
 }
 
 type ServerConfig struct {
@@ -81,11 +81,11 @@ type LoggingConfig struct {
 }
 
 type UIConfig struct {
-	Enable           *bool  `yaml:"enable"`
-	Title            string `yaml:"title"`
-	GradientStart    string `yaml:"gradient_start"`
-	GradientEnd      string `yaml:"gradient_end"`
-	LogoPath         string `yaml:"logo_path"`
+	Enable        *bool  `yaml:"enable"`
+	Title         string `yaml:"title"`
+	GradientStart string `yaml:"gradient_start"`
+	GradientEnd   string `yaml:"gradient_end"`
+	LogoPath      string `yaml:"logo_path"`
 }
 
 func Load(path string) (*Config, error) {
@@ -165,10 +165,10 @@ func (c *Config) setDefaults() error {
 		c.UI.Title = "Sign In"
 	}
 	if c.UI.GradientStart == "" {
-		c.UI.GradientStart = "#667eea"
+		c.UI.GradientStart = "#122e53"
 	}
 	if c.UI.GradientEnd == "" {
-		c.UI.GradientEnd = "#764ba2"
+		c.UI.GradientEnd = "#127a87"
 	}
 
 	return nil

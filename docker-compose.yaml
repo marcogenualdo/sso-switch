@@ -8,6 +8,9 @@ services:
     container_name: sso-switch
     ports:
       - "9090:8080"
+    environment:
+      auth0_CLIENT_ID: "${auth0_CLIENT_ID}"
+      auth0_CLIENT_SECRET: "${auth0_CLIENT_SECRET}"
     volumes:
       - ./tests/proxy/cfg.yaml:/etc/sso-switch/config.yaml:ro
       - ./tests/proxy/certs:/etc/sso-switch/certs
