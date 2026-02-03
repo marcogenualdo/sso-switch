@@ -251,8 +251,12 @@ func (p *Provider) GetMetadata() (*saml.EntityDescriptor, error) {
 
 func fetchIDPMetadata(ctx context.Context, cfg config.SAMLConfig) (*saml.EntityDescriptor, error) {
 	if cfg.IDPMetadataXML != "" {
+        rawMetadata, err := os.ReadFile(cfg.IDPMetadataXML)
+        if err != nil {
+            return nil, fmt.Errorf("failed to read IdP metadata file at %s: %w", cfg.IDPMetadataXML, err)
+        }
 		metadata := &saml.EntityDescriptor{}
-		if err := xml.Unmarshal([]byte(cfg.IDPMetadataXML), metadata); err != nil {
+		if err := xml.Unmarshal(rawMetadata, metadata); err != nil {
 			return nil, fmt.Errorf("failed to parse IdP metadata XML: %w", err)
 		}
 		return metadata, nil
